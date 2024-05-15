@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exoplanet Expedition Planner</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  th {
+    background-color: #f2f2f2;
+  }
+</style>
+</head>
+<body>
+
+<h1>Exoplanet Expedition Planner</h1>
+
+<table>
+  <tr>
+    <th>Instrument</th>
+    <th>Weight (kg)</th>
+    <th>Volume (m<sup>3</sup>)</th>
+    <th>Base Scientific Value</th>
+    <th>Select</th>
+  </tr>
+  <tr>
+    <td>Instrument 1</td>
+    <td>3</td>
+    <td>2</td>
+    <td>10</td>
+    <td><input type="checkbox" name="instrument" value="0"></td>
+  </tr>
+  <tr>
+    <td>Instrument 2</td>
+    <td>4</td>
+    <td>3</td>
+    <td>15</td>
+    <td><input type="checkbox" name="instrument" value="1"></td>
+  </tr>
+  <tr>
+    <td>Instrument 3</td>
+    <td>2</td>
+    <td>1</td>
+    <td>8</td>
+    <td><input type="checkbox" name="instrument" value="2"></td>
+  </tr>
+  <tr>
+    <td>Instrument 4</td>
+    <td>5</td>
+    <td>4</td>
+    <td>20</td>
+    <td><input type="checkbox" name="instrument" value="3"></td>
+  </tr>
+</table>
+
+<h2>Optimal Instrument Selection</h2>
+
+<p>Total Weight: <span id="total-weight"></span> kg</p>
+<p>Total Volume: <span id="total-volume"></span> m<sup>3</sup></p>
+<p>Total Scientific Value: <span id="total-value"></span></p>
+
+<script>
+  // Define instrument details
+  const instruments = [
+    { name: 'Instrument 1', weight: 3, volume: 2, value: 10 },
+    { name: 'Instrument 2', weight: 4, volume: 3, value: 15 },
+    { name: 'Instrument 3', weight: 2, volume: 1, value: 8 },
+    { name: 'Instrument 4', weight: 5, volume: 4, value: 20 }
+  ];
+
+  // Define spacecraft capacity
+  const payloadCapacity = 10; // kg
+  const volumeCapacity = 7; // m^3
+
+  // Function to update the selected instruments
+  function updateSelection() {
+    const selectedIndices = [...document.querySelectorAll('input[name="instrument"]:checked')].map(input => parseInt(input.value));
+    const selectedInstruments = selectedIndices.map(index => instruments[index]);
+
+    // Display the selected instruments
+    const selectedTable = document.getElementById('selected-instruments');
+    selectedTable.innerHTML = '';
+    selectedInstruments.forEach(item => {
+      const row = document.createElement('tr');
+      ['name', 'weight', 'volume', 'value'].forEach(prop => {
+        const td = document.createElement('td');
+        td.textContent = item[prop];
+        row.appendChild(td);
+      });
+      selectedTable.appendChild(row);
+    });
+
+    // Calculate and display total weight, volume, and scientific value
+    const totalWeight = selectedInstruments.reduce((total, item) => total + item.weight, 0);
+    const totalVolume = selectedInstruments.reduce((total, item) => total + item.volume, 0);
+    const totalValue = selectedInstruments.reduce((total, item) => total + item.value, 0);
+
+    document.getElementById('total-weight').textContent = totalWeight;
+    document.getElementById('total-volume').textContent = totalVolume;
+    document.getElementById('total-value').textContent = totalValue;
+  }
+
+  // Attach event listeners to checkboxes
+  const checkboxes = document.querySelectorAll('input[name="instrument"]');
+  checkboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', updateSelection);
+  });
+
+  // Create table for selected instruments
+  const selectedTable = document.createElement('table');
+  selectedTable.id = 'selected-instruments';
+  selectedTable.innerHTML = `
+    <tr>
+      <th>Instrument</th>
+      <th>Weight (kg)</th>
+      <th>Volume (m<sup>3</sup>)</th>
+      <th>Base Scientific Value</th>
+    </tr>
+  `;
+  document.body.appendChild(selectedTable);
+
+</script>
+
+</body>
+</html>
